@@ -1,15 +1,54 @@
 "use client";
 import { useState } from "react";
-import { Game } from "@/types/gameType";
+import { Game, NewsEvent, Year } from "@/types/gameType";
 import MainScreen from "@/app/components/MainScreen";
 import { HomeIcon } from "lucide-react";
 
 export default function Home() {
 	const [game, setGame] = useState<Game | null>(null);
+	const [year, setYear] = useState<Year | null>(null);
+	const [news, setNews] = useState<NewsEvent[] | null>(null)
 	const [creatingGame, setCreatingGame] = useState(false);
 	const [started, setStarted] = useState(false);
+
+	const generateNews = async (gameId: string, yearNumber: number, yearId: string) => {
+	  try {
+		const res = await fetch('/api/news/generate', {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify({ gameId, yearNumber, yearId }),
+		});
+
+		if (!res.ok) throw new Error('Failed to generate news');
+
+		const data = await res.json();
+
+		return data;
+	  } catch (err) {
+		console.error(err);
+		return null;
+	  }
+	};
+
+	const createYear = async (gameId: string, yearNumber: number, globalSummary: string) => {
+	  try {
+		const res = await fetch('/api/year/create', {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify({ gameId, yearNumber, globalSummary }),
+		});
+
+		if (!res.ok) throw new Error('Failed to create year');
+
+		const year = await res.json();
+		return year;
+	  } catch (err) {
+		console.error(err);
+		return null;
+	  }
+	};
+
 	const createGame = async () => {
-		
 		setCreatingGame(true);
 		const res = await fetch("/api/game/create", {
 			method: "POST",
@@ -24,8 +63,15 @@ export default function Home() {
 		const game = await res.json();
 
 		setCreatingGame(false)
-		console.log("Game Created");
+		console.log(game);
 		setGame(game)
+		const globalSummary = `Welcome to your new world, your goal is to amass as much money as possible. You are lucky enough to start with ${game.starting_money} and you have a solid income of ${game.income}. Good Luck! on your journey and dont forget to check the NEWS!`
+		const year = await createYear(game.id, game.current_year, globalSummary); 
+		setYear(year);
+		console.log(year)
+		const news = await generateNews(game.id, year.year_number, year.id); 
+		setNews(news)
+		console.log(news)
 
 	}
   return (
@@ -53,7 +99,7 @@ export default function Home() {
 	{
 	!creatingGame && !started && !game && (
 		<div className=" px-6 py-3 rounded-md font-semibold transition shadow-lg">
-			<button className="hover:cursor-pointer text-white" onClick={() => createGame()}>
+			<button className="hover:cursor-pointer" onClick={() => createGame()}>
 				CREATE GAME
 			</button>
 		</div>)
@@ -72,14 +118,14 @@ export default function Home() {
     <div className="p-6 rounded-xl shadow-md w-80 text-left">
 
       <p className="mb-2">
-        <span className="text-white">Starting Year:</span>{" "}
+        <span className="">Starting Year:</span>{" "}
         <span className="">
 			{game.start_year}
 		</span>
       </p>
 
       <p>
-        <span className="text-white">Starting Money:</span>{" "}
+        <span className="">Starting Money:</span>{" "}
         <span className="">
 			${game.starting_money}
 		</span>

@@ -1,9 +1,10 @@
 import { supabase } from '../supabase';
 
-export async function createYear(gameId: string, yearNumber: number) {
+export async function createYear(gameId: string, yearNumber: number, globalSummary: string) {
+  console.log(globalSummary)
   const { data, error } = await supabase
     .from('years')
-    .insert([{ game_id: gameId, year_number: yearNumber }])
+    .insert([{ game_id: gameId, year_number: yearNumber, global_summary: globalSummary }])
     .select()
     .single();
 

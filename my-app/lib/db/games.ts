@@ -7,7 +7,7 @@ export async function createGame(userId: string) {
       {
         user_id: userId,
         start_year: 2025,
-        current_year: 0,
+        current_year: 2025,
         starting_money: 10000,
         current_money: 10000,
         income: 2000,
