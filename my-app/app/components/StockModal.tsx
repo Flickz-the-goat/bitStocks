@@ -1,13 +1,25 @@
 'use client';
 
+import { useState } from 'react';
 import { Chart } from 'react-google-charts';
+import { createTransaction } from '@/lib/db/transactions';
+import { updateGameMoney } from '@/lib/db/games';
+import { buyStock, sellStock } from '@/lib/db/portfolio';
 
 export default function StockModal({
   stock,
   onClose,
+  gameId,
+  yearId,
+  currentMoney,
+  setGame,
 }: {
   stock: any;
   onClose: () => void;
+  gameId: string;
+  yearId: string;
+  currentMoney: number;
+  setGame: (game: any) => void;
 }) {
   const prices = stock.yearly_prices || [];
 
@@ -23,24 +35,112 @@ export default function StockModal({
     backgroundColor: 'transparent',
   };
 
+  const [shares, setShares] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const latestPrice =
+    prices?.[prices.length - 1]?.price || 0;
+
+  const totalCost = shares * latestPrice;
+
+  // 🔥 BUY
+  const handleBuy = async () => {
+    if (shares <= 0) return;
+
+    if (totalCost > currentMoney) {
+      alert('Not enough money');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await buyStock(gameId, stock.id, shares, latestPrice);
+
+      await createTransaction(
+        gameId,
+        stock.id,
+        'buy',
+        shares,
+        latestPrice,
+        yearId
+      );
+
+      const newMoney = currentMoney - totalCost
+      await updateGameMoney(gameId, newMoney);
+
+      
+    // 🔥 instant UI update
+    setGame((prev: any) => ({
+      ...prev,
+      current_money: newMoney,
+    }));
+          onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔥 SELL
+  const handleSell = async () => {
+    if (shares <= 0) return;
+
+    try {
+      setLoading(true);
+
+      await sellStock(gameId, stock.id, shares);
+
+      await createTransaction(
+        gameId,
+        stock.id,
+        'sell',
+        shares,
+        latestPrice,
+        yearId
+      );
+
+      await updateGameMoney(gameId, currentMoney + totalCost);
+
+      const newMoney = currentMoney + totalCost;
+
+    await updateGameMoney(gameId, newMoney);
+
+    setGame((prev: any) => ({
+      ...prev,
+      current_money: newMoney,
+    }));
+
+      onClose();
+    } catch (err) {
+      alert('Not enough shares to sell');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 ">
       <div
-        className="p-6 rounded-2xl w-[650px] relative shadow-2xl border"
+        className="p-6 rounded-2xl w-[650px] relative shadow-2xl border overflow-scroll"
         style={{
           backgroundColor: 'var(--bg-primary)',
           color: 'var(--text-primary)',
           borderColor: 'var(--border-primary)',
         }}
       >
+        {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-lg transition hover:scale-110"
+          className="absolute top-3 right-4 text-lg hover:scale-110 transition"
           style={{ color: 'var(--text-secondary)' }}
         >
           ✕
         </button>
 
+        {/* Header */}
         <h2 className="text-xl font-bold">{stock.name}</h2>
         <p
           className="mb-4"
@@ -49,6 +149,7 @@ export default function StockModal({
           {stock.ticker}
         </p>
 
+        {/* Chart */}
         {prices.length > 0 ? (
           <Chart
             chartType="LineChart"
@@ -63,6 +164,7 @@ export default function StockModal({
           </p>
         )}
 
+        {/* Summary */}
         {stock.year_summary && (
           <div
             className="mt-4 text-sm grid grid-cols-2 gap-3 p-3 rounded-xl"
@@ -74,6 +176,64 @@ export default function StockModal({
             <p>Low: ${stock.year_summary.low_price}</p>
           </div>
         )}
+
+        {/* 🔥 BUY / SELL PANEL */}
+        <div
+          className="mt-6 p-4 rounded-xl border space-y-3"
+          style={{
+            backgroundColor: 'var(--bg-secondary)',
+            borderColor: 'var(--border-primary)',
+          }}
+        >
+          <div className="flex justify-between text-sm">
+            <span>Price:</span>
+            <span>${latestPrice}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span>Your Money:</span>
+            <span>${currentMoney}</span>
+          </div>
+
+          <input
+            type="number"
+            min={0}
+            value={shares}
+            onChange={(e) => setShares(Number(e.target.value))}
+            placeholder="Shares"
+            className="w-full p-2 rounded-lg border"
+            style={{
+              backgroundColor: 'var(--bg-primary)',
+              borderColor: 'var(--border-primary)',
+              color: 'var(--text-primary)',
+            }}
+          />
+
+          <div className="flex justify-between text-sm">
+            <span>Total:</span>
+            <span>${totalCost}</span>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleBuy}
+              disabled={loading}
+              className="flex-1 py-2 rounded-lg font-semibold"
+              style={{ backgroundColor: '#22c55e', color: 'white' }}
+            >
+              Buy
+            </button>
+
+            <button
+              onClick={handleSell}
+              disabled={loading}
+              className="flex-1 py-2 rounded-lg font-semibold"
+              style={{ backgroundColor: '#ef4444', color: 'white' }}
+            >
+              Sell
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

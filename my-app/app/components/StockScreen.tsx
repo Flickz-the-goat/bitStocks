@@ -3,7 +3,17 @@ import { useEffect, useState } from 'react';
 import StockCard from './StockCard';
 import StockModal from './StockModal';
 
-export default function StockScreen({ yearId }: { yearId: string }) {
+export default function StockScreen({
+  yearId,
+  gameId,
+  currentMoney,
+  setGame,
+}: {
+  yearId: string;
+  gameId: string;
+  currentMoney: number;
+  setGame: (game: any) => void;
+}) {
   const [stocks, setStocks] = useState<any[]>([]);
   const [selectedStock, setSelectedStock] = useState<any | null>(null);
 
@@ -45,6 +55,10 @@ export default function StockScreen({ yearId }: { yearId: string }) {
         <StockModal
           stock={selectedStock}
           onClose={() => setSelectedStock(null)}
+          gameId={gameId}
+          yearId={yearId}
+          currentMoney={currentMoney}
+          setGame={setGame}
         />
       )}
     </div>
