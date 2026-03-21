@@ -60,12 +60,12 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
       </div>
 
       {/* Main Screen */}
-      <div className="p-4 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+      <div className="max-h-[calc(100vh-80px)] p-4 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)'}}>
         {renderActiveView()}
       </div>
 
       {/* Right Panel (OtherPanel) */}
-      <OtherPanel />
+      <OtherPanel gameId={game.id} yearId={year.id} currentMoney={game.current_money}/>
     </div>
     </div>
   );

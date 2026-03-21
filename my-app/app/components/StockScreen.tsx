@@ -34,7 +34,7 @@ export default function StockScreen({
 
   return (
     <div
-      className="p-4 h-full overflow-y-auto"
+      className="p-4 max-h-full overflow-y-scroll"
       style={{
         color: 'var(--text-primary)',
       }}
