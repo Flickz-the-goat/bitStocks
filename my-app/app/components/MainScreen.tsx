@@ -6,6 +6,7 @@ import { useState } from "react";
 // import News from "./News";
 import OtherPanel from "./OtherPanel";
 import Header from "./Header";
+import HomeScreen from "./HomeScreen";
 import { Game, Year, NewsEvent } from "@/types/gameType";
 import NewsScreen from "./NewsScreen";
 import StockScreen from "./StockScreen";
@@ -33,9 +34,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
          return <NewsScreen news={news} year={year}/>;
       default:
         return (
-          <div className="text-center text-lg" style={{ color: 'var(--text-primary)' }}>
-            Welcome to Bit Stock!
-          </div>
+          <HomeScreen game={game} year={year} news={news} />
         );
     }
   };
