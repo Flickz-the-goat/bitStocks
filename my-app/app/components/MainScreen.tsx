@@ -7,6 +7,8 @@ import { useState } from "react";
 import OtherPanel from "./OtherPanel";
 import Header from "./Header";
 import { Game, Year, NewsEvent } from "@/types/gameType";
+import NewsScreen from "./NewsScreen";
+import StockScreen from "./StockScreen";
 
 interface MainScreenProps {
   game: Game | null;
@@ -19,15 +21,16 @@ interface MainScreenProps {
 
 export default function MainScreen({ game, setGame, year, setYear, news, setNews }: MainScreenProps) {
   const [activeView, setActiveView] = useState("home");
+  if(!game || !year || !news) return
 
   const renderActiveView = () => {
     switch (activeView) {
-    //   case "graphs":
-    //     return <Graphs />;
+      case "graphs":
+        return <StockScreen yearId={year.id}/>;
     //   case "portfolio":
     //     return <Portfolio />;
-    //   case "news":
-    //     return <News />;
+    case "news":
+         return <NewsScreen news={news} year={year}/>;
       default:
         return (
           <div className="text-center text-lg" style={{ color: 'var(--text-primary)' }}>
@@ -57,7 +60,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
       </div>
 
       {/* Main Screen */}
-      <div className="p-6 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+      <div className="p-4 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
         {renderActiveView()}
       </div>
 

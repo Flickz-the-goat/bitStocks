@@ -45,9 +45,6 @@ export interface Stock {
   ticker: string;
   sector_id: string;
   base_price: number;
-
-  // optional joined data
-  sectors?: Sector;
 }
 
 // =========================

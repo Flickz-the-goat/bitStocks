@@ -48,6 +48,16 @@ export default function Home() {
 	  }
 	};
 
+	const generateMarket = async (yearId: string) => {
+	const res = await fetch('/api/market/generate', {
+		method: 'POST',
+		headers: {
+		'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ yearId }),
+	});
+	return await res.json();
+	};
 	const createGame = async () => {
 		setCreatingGame(true);
 		const res = await fetch("/api/game/create", {
@@ -70,9 +80,10 @@ export default function Home() {
 		setYear(year);
 		console.log(year)
 		const news = await generateNews(game.id, year.year_number, year.id); 
-		setNews(news)
+		setNews(news.news)
 		console.log(news)
-
+		const success = await generateMarket(year.id);
+		console.log(success)
 	}
   return (
     <div className="flex flex-col flex-1 items-center justify-center font-sans">
