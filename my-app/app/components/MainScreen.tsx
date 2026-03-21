@@ -42,7 +42,7 @@ export default function MainScreen() {
                 style={{ color: 'var(--text-primary)', backgroundColor: 'var(--bg-accent)' }}
         >
           {option}
-        </button> ))
+        </button>  ))
         }
       </div>
 

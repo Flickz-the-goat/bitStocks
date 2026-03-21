@@ -35,7 +35,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   useEffect(() => {
-    document.body.className = `theme-${theme}`;
+    document.body.className = `theme-${theme} min-h-screen flex flex-col text-black`;
   }, [theme]);
 
   return (
