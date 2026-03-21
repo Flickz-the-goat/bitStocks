@@ -6,8 +6,18 @@ import { useState } from "react";
 // import News from "./News";
 import OtherPanel from "./OtherPanel";
 import Header from "./Header";
+import { Game, Year, NewsEvent } from "@/types/gameType";
 
-export default function MainScreen() {
+interface MainScreenProps {
+  game: Game | null;
+  setGame: (game: Game | null) => void;
+  year: Year | null;
+  setYear: (year: Year | null) => void;
+  news: NewsEvent[] | null;
+  setNews: (news: NewsEvent[] | null) => void;
+}
+
+export default function MainScreen({ game, setGame, year, setYear, news, setNews }: MainScreenProps) {
   const [activeView, setActiveView] = useState("home");
 
   const renderActiveView = () => {

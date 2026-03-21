@@ -144,7 +144,8 @@ export default function Home() {
 	)}
 
 	{/* Main Screen */}
-	{started && <MainScreen />}
+	{started && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} 
+	/>}
     </div>
   );
 }
