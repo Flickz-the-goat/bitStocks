@@ -3,7 +3,7 @@ import { supabase } from '../supabase';
 export async function getPortfolio(gameId: string) {
   const { data, error } = await supabase
     .from('portfolio')
-    .select('*, stocks(name, ticker)')
+    .select('*')
     .eq('game_id', gameId);
 
   if (error) throw error;
