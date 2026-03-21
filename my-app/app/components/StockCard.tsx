@@ -14,7 +14,11 @@ export default function StockCard({
     >
       <h2 className="font-bold text-lg">{stock.name}</h2>
       <p className="text-sm text-gray-500">{stock.ticker}</p>
-
+        {stock.ownedShares && (
+      <p className="text-sm mt-1">
+        Shares: {stock.ownedShares}
+      </p>
+    )}
       {summary ? (
         <div className="mt-2 text-sm">
           <p>Close: ${summary.close_price}</p>

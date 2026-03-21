@@ -11,6 +11,7 @@ import { Game, Year, NewsEvent } from "@/types/gameType";
 import NewsScreen from "./NewsScreen";
 import StockScreen from "./StockScreen";
 import { GamepadIcon } from "lucide-react";
+import PortfolioScreen from "./PortfolioScreen";
 
 interface MainScreenProps {
   game: Game | null;
@@ -29,8 +30,8 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
     switch (activeView) {
       case "graphs":
         return <StockScreen yearId={year.id} gameId={game.id} currentMoney={game.current_money} setGame={setGame}/>;
-    //   case "portfolio":
-    //     return <Portfolio />;
+      case "portfolio":
+         return <PortfolioScreen gameId={game.id} yearId={year.id} currentMoney={game.current_money} setGame={setGame} />;
     case "news":
          return <NewsScreen news={news} year={year}/>;
       default:

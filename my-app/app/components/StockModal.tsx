@@ -154,7 +154,7 @@ export default function StockModal({
           <Chart
             chartType="LineChart"
             width="100%"
-            height="300px"
+            height="200px"
             data={chartData}
             options={options}
           />
