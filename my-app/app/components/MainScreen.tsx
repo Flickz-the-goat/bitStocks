@@ -5,6 +5,7 @@ import { useState } from "react";
 // import Portfolio from "./Portfolio";
 // import News from "./News";
 import OtherPanel from "./OtherPanel";
+import Header from "./Header";
 
 export default function MainScreen() {
   const [activeView, setActiveView] = useState("home");
@@ -19,7 +20,7 @@ export default function MainScreen() {
     //     return <News />;
       default:
         return (
-          <div className="text-white text-center text-lg">
+          <div className="text-center text-lg" style={{ color: 'var(--text-primary)' }}>
             Welcome to Bit Stock!
           </div>
         );
@@ -27,15 +28,18 @@ export default function MainScreen() {
   };
   const options = ["home", "portfolio", "graphs", "news"];
   return (
-    <div className="flex min-h-screen w-full gap-2">
+    <div className="min-h-screen w-full flex flex-col">
+      <Header />
+      <div className="flex-1 grid grid-cols-[1fr_4fr_1fr] gap-2 p-2">
       {/* Left Menu */}
-      <div className="w-48 p-4 flex flex-col gap-4 rounded-md border-1 border-gray-700">
+      <div className="p-4 flex flex-col gap-4 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
         {
         options.map((option) => (
             <button
                 key={option} //just to avoid react warning, can be removed - calvin
                 onClick={() => setActiveView(option)}
-                className=" hover:bg-gray-200 hover:cursor-pointer px-6 py-2 rounded-md font-semibold transition text-gray600"
+                className="hover:opacity-80 px-6 py-2 rounded-md font-semibold transition"
+                style={{ color: 'var(--text-primary)', backgroundColor: 'var(--bg-accent)' }}
         >
           {option}
         </button> ))
@@ -43,12 +47,13 @@ export default function MainScreen() {
       </div>
 
       {/* Main Screen */}
-      <div className="flex-1 p-6 flex flex-col min-w-0 rounded-md border-1 border-gray-700">
+      <div className="p-6 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
         {renderActiveView()}
       </div>
 
       {/* Right Panel (OtherPanel) */}
       <OtherPanel />
+    </div>
     </div>
   );
 }
