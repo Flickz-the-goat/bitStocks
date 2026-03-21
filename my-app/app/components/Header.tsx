@@ -1,6 +1,6 @@
 "use client";
 
-import { Lasso, Moon, Sun } from "lucide-react";
+import { ChartNoAxesColumn, ChartNoAxesCombined, Lasso, Moon, Sun } from "lucide-react";
 import { useTheme } from "../lib/ThemeContext";
 
 export default function Header() {
@@ -9,7 +9,9 @@ export default function Header() {
   return (
     <header className="flex justify-between items-center p-4 border-b" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}>
       <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-        Bit Stocks
+        <div className="inline-flex items-center gap-2">
+        Bit Stocks <ChartNoAxesCombined />
+        </div>
       </h1>
       <div className="flex gap-2">
         <button

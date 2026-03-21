@@ -6,6 +6,7 @@ import { useState } from "react";
 // import News from "./News";
 import OtherPanel from "./OtherPanel";
 import Header from "./Header";
+import HomeScreen from "./HomeScreen";
 import { Game, Year, NewsEvent } from "@/types/gameType";
 
 interface MainScreenProps {
@@ -30,9 +31,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
     //     return <News />;
       default:
         return (
-          <div className="text-center text-lg" style={{ color: 'var(--text-primary)' }}>
-            Welcome to Bit Stock!
-          </div>
+          <HomeScreen game={game} year={year} news={news} />
         );
     }
   };
@@ -57,7 +56,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
       </div>
 
       {/* Main Screen */}
-      <div className="p-6 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+      <div className="p-6 flex flex-col min-w-0 min-h-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
         {renderActiveView()}
       </div>
 
