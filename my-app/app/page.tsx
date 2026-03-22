@@ -119,15 +119,18 @@ export default function Home() {
   </div>
 ) : null
 	}
-	{
-	!creatingGame && !started && !game && (
-		<div className="bg-gray-100 px-8 py-4 rounded-xl font-semibold transition shadow-md border border-gray-300 hover:bg-gray-200 hover:shadow-lg">
-			<button className="hover:cursor-pointer text-gray-800" onClick={() => createGame()}>
-				CREATE GAME
-			</button>
-		</div>)
-	}
-	
+
+	{/* CREATE GAME Screen */}
+	{/* CREATE GAME */} <div> 
+		{ !creatingGame && !started && !game && ( 
+			<div className="bg-blue-50 px-8 py-4 rounded-xl 
+			font-semibold transition shadow-md border border-blue-200 
+			hover:bg-blue-100 hover:shadow-lg cursor-pointer text-blue-800" 
+			onClick={() => createGame()}> 
+			CREATE GAME 
+			</div>) 
+			} 
+			</div>
 	{
 	game && !started && (
   		<div className="flex flex-col items-center justify-center gap-6 text-center">
@@ -207,6 +210,8 @@ export default function Home() {
 
       return (
         <>
+
+		{/* End Screen */}
           <div className="grid grid-cols-2 gap-4 w-full max-w-md text-left">
             <div className="rounded-lg p-3 bg-gray-50 border border-gray-200">
               <p className="text-xs text-gray-500">Starting</p>

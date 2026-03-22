@@ -52,7 +52,7 @@ export default function HomeScreen({ game, year, news, finishedGame, setFinished
 
       {/* Action Button */}
       <div className="mt-6 flex justify-center">
-        <ActionButton game={game} currentYear={year} endYear={2030} news={news} setGame={setGame} setYear={setYear} setNews={setNews} setFinishedGame={setFinishedGame}/>
+        <ActionButton game={game} currentYear={year} endYear={2028} news={news} setGame={setGame} setYear={setYear} setNews={setNews} setFinishedGame={setFinishedGame}/>
 
       </div>
     </div>
