@@ -152,10 +152,17 @@ export default function OtherPanel({currentYear, gameId, yearId, currentMoney }:
         setChartData(data);
 
         const netWorth = await fetchNetWorthHistory(gameId);
-        const networthDataFormatted: (string | number)[][] = [['Year', 'Net Worth']];
 
-        if (Array.isArray(netWorth) && netWorth.length > 0) {
-          netWorth.forEach((item: any) => {
+        const networthDataFormatted: (string | number)[][] = [['Year','Net Worth']];
+        networthDataFormatted.push(['2025', 10000]);
+
+        if (Array.isArray(netWorth) && netWorth.length >= 0) {
+          const sortedNetWorth = [...netWorth].sort((a: any, b: any) => {
+          const yearA = a?.years?.year_number ?? a?.year_id ?? 0;
+          const yearB = b?.years?.year_number ?? b?.year_id ?? 0;
+          return yearA - yearB; // ascending order
+        });
+            sortedNetWorth.forEach((item: any) => {
             const year = item?.years?.year_number ?? item?.year_id ?? 'N/A';
             networthDataFormatted.push([`${year}`, item.net_worth]);
           });
@@ -191,6 +198,7 @@ export default function OtherPanel({currentYear, gameId, yearId, currentMoney }:
   hAxis: {
     textStyle: { color: panelTextColor },
     titleTextStyle: { color: panelTextColor },
+    textPosition: 'none'
   },
   vAxis: {
     textStyle: { color: panelTextColor },

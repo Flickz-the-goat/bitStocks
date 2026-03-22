@@ -27,7 +27,7 @@ def generate_news_route(payload: dict):
         return {
             "year": year,
             "events": all_news[year],
-            "cached": True
+            "cached": True,
         }
 
     # ✅ Generate ONLY current year (fastest possible response)
@@ -41,5 +41,5 @@ def generate_news_route(payload: dict):
     return {
         "year": year,
         "events": events,
-        "cached": False
+        "cached": False,
     }

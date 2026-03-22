@@ -5,6 +5,7 @@ import MainScreen from "@/app/components/MainScreen";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { addNetWorth } from "@/lib/db/years";
+import { ChartNoAxesCombined } from "lucide-react";
 
 export default function Home() {
 	const [game, setGame] = useState<Game | null>(null);
@@ -121,11 +122,47 @@ export default function Home() {
 	}
 	{
 	!creatingGame && !started && !game && (
-		<div className="bg-gray-100 px-8 py-4 rounded-xl font-semibold transition shadow-md border border-gray-300 hover:bg-gray-200 hover:shadow-lg">
-			<button className="hover:cursor-pointer text-gray-800" onClick={() => createGame()}>
-				CREATE GAME
-			</button>
-		</div>)
+
+
+<div
+  className="px-10 py-8 rounded-2xl border shadow-md transition-all hover:shadow-xl space-y-6 text-center"
+  style={{
+    backgroundColor: "var(--bg-secondary)",
+    borderColor: "var(--border-primary)",
+    color: "var(--text-primary)",
+  }}
+>
+  {/* Title + Icon */}
+  <div className="flex items-center justify-center gap-3">
+    <ChartNoAxesCombined size={32} />
+    <h1 className="text-3xl font-extrabold tracking-tight">
+      BitStocks
+    </h1>
+  </div>
+
+  {/* Tagline */}
+  <p
+    className="text-sm md:text-base italic"
+    style={{ color: "var(--text-secondary)" }}
+  >
+    A simulation of strategy, risk and chaos.
+  </p>
+
+  {/* CTA Button */}
+  <div
+    className="mt-2 px-8 py-4 rounded-xl font-semibold transition-all border cursor-pointer hover:scale-[1.03] hover:shadow-lg"
+    style={{
+      background: "linear-gradient(135deg, var(--bg-accent), var(--bg-primary))",
+      borderColor: "var(--border-primary)",
+    }}
+    onClick={() => createGame()}
+  >
+    <span className="text-lg font-bold tracking-wide">
+    	CREATE GAME
+    </span>
+  </div>
+</div>
+		)
 	}
 	
 	{
