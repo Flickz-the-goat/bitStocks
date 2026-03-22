@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
+import { useTheme } from '@/app/lib/ThemeContext';
 
 interface OtherPanelProps {
   gameId: string;
@@ -56,6 +57,7 @@ async function fetchRecentTransactions(gameId: string) {
 }
 
 export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelProps) {
+  const { theme } = useTheme();
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
   const [stocksMap, setStocksMap] = useState<Map<string, any>>(new Map());
   const [pricesMap, setPricesMap] = useState<Map<string, number>>(new Map());
@@ -169,13 +171,99 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
   };
 
   return (
-    <div className="w-84 p-4 flex flex-col gap-4 rounded-xl" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+    <div className="w-84 p-4 flex flex-col gap-4 rounded-xl relative" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+      {/* Tumbleweed animation - only for wild west theme */}
+      {theme === 'wildwest' && (
+        <>
+          <style>{`
+            @keyframes tumbleweed-move-1 {
+              from {
+                left: -50px;
+                transform: translateY(0px) rotate(0deg);
+              }
+              to {
+                left: 100vw;
+                transform: translateY(-200px) rotate(3600deg);
+              }
+            }
+            @keyframes tumbleweed-move-2 {
+              from {
+                left: -50px;
+                transform: translateY(0px) rotate(0deg);
+              }
+              to {
+                left: 100vw;
+                transform: translateY(-400px) rotate(3600deg);
+              }
+            }
+            @keyframes tumbleweed-move-3 {
+              from {
+                left: -50px;
+                transform: translateY(0px) rotate(0deg);
+              }
+              to {
+                left: 100vw;
+                transform: translateY(-100px) rotate(3600deg);
+              }
+            }
+            .tumbleweed {
+              position: fixed;
+              width: 40px;
+              height: 40px;
+              z-index: 10;
+              pointer-events: none;
+            }
+            .tumbleweed::before {
+              content: '';
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              border: 2px solid #8B4513;
+              border-radius: 50%;
+              box-shadow: 
+                inset 2px 2px 0 rgba(139, 69, 19, 0.5),
+                inset -2px -2px 0 rgba(139, 69, 19, 0.5);
+            }
+            .tumbleweed::after {
+              content: '';
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              border: 2px solid #A0522D;
+              border-radius: 50%;
+              transform: rotate(45deg);
+            }
+          `}</style>
+          <div 
+            className="tumbleweed"
+            style={{
+              animation: 'tumbleweed-move-1 8s linear infinite',
+              top: '10%'
+            }}
+          />
+          <div 
+            className="tumbleweed"
+            style={{
+              animation: 'tumbleweed-move-2 12s linear infinite 2s',
+              top: '20%'
+            }}
+          />
+          <div 
+            className="tumbleweed"
+            style={{
+              animation: 'tumbleweed-move-3 10s linear infinite 4s',
+              top: '15%'
+            }}
+          />
+        </>
+      )}
       {/* Container 1 - Pie Chart */}
-      <div className="flex-1 rounded-xl p-4 shadow-md flex items-center justify-center" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col items-center justify-center border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+        <h2 className="text-sm font-bold mb-2 text-gray-800">Portfolio by Sector</h2>
         {loading ? (
-          <span>Loading...</span>
+          <span className="text-gray-600">Loading...</span>
         ) : error ? (
-          <span>Error: {error}</span>
+          <span className="text-red-600 font-semibold">Error: {error}</span>
         ) : chartData.length >= 1 ? (
           <Chart
             chartType="PieChart"
@@ -185,12 +273,13 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
             options={options}
           />
         ) : (
-          <span>No portfolio data</span>
+          <span className="text-gray-600">No portfolio data</span>
         )}
       </div>
 
       {/* Container 2 - Net Worth Line Chart */}
-      <div className="flex-1 rounded-xl p-4 shadow-md" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+        <h2 className="text-sm font-bold mb-2 text-gray-800">Net Worth History</h2>
         {netWorthData.length > 1 ? (
           <Chart
             chartType="LineChart"
@@ -200,23 +289,25 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
             options={netWorthOptions}
           />
         ) : (
-          <span>No net worth history</span>
+          <span className="text-gray-600">No net worth history</span>
         )}
       </div>
 
       {/* Container 3 - Recent Transactions */}
-      <div className="flex-1 rounded-xl p-4 shadow-md" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
-        <h3 className="font-semibold mb-2">Recent Transactions</h3>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+        <h3 className="font-bold text-sm mb-3 text-gray-800">Recent Transactions</h3>
         <div className="flex flex-col gap-2 max-h-44 overflow-y-auto">
           {transactions.length > 0 ? (
             transactions.map((tx) => (
-              <div key={tx.id} className="text-sm">
-                <span className="font-medium">{tx.type.toUpperCase()}</span> {tx.shares} shares of
-                <span className="font-semibold"> {tx.stocks?.ticker || tx.stock_id}</span> @ ${tx.price.toLocaleString()}
+              <div key={tx.id} className="text-xs p-2 rounded bg-gray-100 border border-gray-200">
+                <span className="font-bold text-gray-800">{tx.type.toUpperCase()}</span>
+                <span className="text-gray-700"> {tx.shares} shares of </span>
+                <span className="font-semibold text-gray-900">{tx.stocks?.ticker || tx.stock_id}</span>
+                <span className="text-gray-700"> @ ${tx.price.toLocaleString()}</span>
               </div>
             ))
           ) : (
-            <span>No transactions</span>
+            <span className="text-gray-600">No transactions</span>
           )}
         </div>
       </div>

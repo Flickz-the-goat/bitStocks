@@ -52,7 +52,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
             <button
                 key={option} //just to avoid react warning, can be removed - calvin
                 onClick={() => setActiveView(option)}
-                className="hover:opacity-80 px-6 py-2 rounded-md font-semibold transition"
+                className="hover:opacity-80 cursor-pointer px-6 py-2 rounded-md font-semibold transition"
                 style={{ color: 'var(--text-primary)', backgroundColor: 'var(--bg-accent)' }}
         >
           {option}

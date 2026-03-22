@@ -8,12 +8,12 @@ body {
 
 /* Default white theme */
 .theme-white {
-  --bg-primary: #ffffff;
+  --bg-primary: #e7f0fa;
   --text-primary: #000000;
   --border-primary: #d1d5db;
   --bg-secondary: #f9fafb;
   --text-secondary: #6b7280;
-  --bg-accent: #f3f4f6;
+  --bg-accent: #f9ecd9;
 }
 
 /* Dark theme */

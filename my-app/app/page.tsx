@@ -92,15 +92,15 @@ export default function Home() {
   <div className="flex flex-col items-center justify-center gap-6 text-center">
     
     {/* Spinner */}
-    <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+    <div className="w-16 h-16 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
     
     {/* Main Text */}
-    <p className="text-lg font-semibold text-white">
+    <p className="text-lg font-semibold text-gray-800">
       Creating Your Market...
     </p>
 
     {/* Sub Text (immersive) */}
-    <p className="text-gray-400 text-sm animate-pulse">
+    <p className="text-gray-600 text-sm animate-pulse">
       Simulating economy • Generating stocks • Preparing events
     </p>
 
@@ -109,8 +109,8 @@ export default function Home() {
 	}
 	{
 	!creatingGame && !started && !game && (
-		<div className=" px-6 py-3 rounded-md font-semibold transition shadow-lg">
-			<button className="hover:cursor-pointer" onClick={() => createGame()}>
+		<div className="bg-gray-100 px-8 py-4 rounded-xl font-semibold transition shadow-md border border-gray-300 hover:bg-gray-200 hover:shadow-lg">
+			<button className="hover:cursor-pointer text-gray-800" onClick={() => createGame()}>
 				CREATE GAME
 			</button>
 		</div>)
@@ -121,32 +121,32 @@ export default function Home() {
   		<div className="flex flex-col items-center justify-center gap-6 text-center">
     
     {/* Title */}
-    <h2 className="text-3xl font-bold">
+    <h2 className="text-3xl font-bold text-gray-800">
       Game Ready
     </h2>
 
     {/* Info Card */}
-    <div className="p-6 rounded-xl shadow-md w-80 text-left">
+    <div className="p-6 rounded-xl shadow-md w-80 text-left bg-gray-50 border border-gray-300">
 
-      <p className="mb-2">
-        <span className="">Starting Year:</span>{" "}
-        <span className="">
+      <div className="mb-4">
+        <p className="text-sm font-semibold text-gray-700 mb-1">Starting Year</p>
+        <p className="text-lg font-bold text-gray-900">
 			{game.start_year}
-		</span>
-      </p>
+		</p>
+      </div>
 
-      <p>
-        <span className="">Starting Money:</span>{" "}
-        <span className="">
-			${game.starting_money}
-		</span>
-	  	</p>
+      <div>
+        <p className="text-sm font-semibold text-gray-700 mb-1">Starting Money</p>
+        <p className="text-lg font-bold text-gray-900">
+			${game.starting_money.toLocaleString()}
+		</p>
+	  	</div>
     </div>
 
     {/* Start Button */}
     <button
       onClick={() => setStarted(true)}
-      className=" px-6 py-3 rounded-xl font-semibold transition shadow-lg"
+      className="hover:cursor-pointer px-8 py-4 rounded-xl font-semibold transition shadow-md bg-gray-100 border border-gray-300 hover:bg-gray-200 hover:shadow-lg text-gray-800"
     >
       Enter Game →
     </button>
