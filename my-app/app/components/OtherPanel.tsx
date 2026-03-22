@@ -157,7 +157,7 @@ export default function OtherPanel({currentYear, gameId, yearId, currentMoney }:
         if (Array.isArray(netWorth) && netWorth.length > 0) {
           netWorth.forEach((item: any) => {
             const year = item?.years?.year_number ?? item?.year_id ?? 'N/A';
-            networthDataFormatted.push([`Y${year}`, item.net_worth]);
+            networthDataFormatted.push([`${year}`, item.net_worth]);
           });
         } else {
           // fallback to current money if no net worth history data exists

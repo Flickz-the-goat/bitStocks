@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { nextYear } from "@/lib/db/years";
 import { supabase } from "@/lib/supabase";
 import { getAllStocks, getSectors } from "@/lib/db/stocks";
+import { nextYear } from "@/lib/db/years";
 
 interface ActionButtonProps {
   game: any;
@@ -86,7 +86,6 @@ export default function ActionButton({
       setYear(newYear);
      // 3️⃣ update game money locally
       setGame(newGame);
-
 
       // 5️⃣ generate NEW news for next year
       const newNews = await generateNews(

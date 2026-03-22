@@ -60,6 +60,63 @@ function resolveNewsImpacts(news: NewsEvent[]) {
   return sectorImpactMap;
 }
 
+async function calculateNetWorth(game: any, yearId: string) {
+
+  // 2. Get portfolio
+  const { data: portfolio, error: portfolioError } = await supabase
+    .from('portfolio')
+    .select('*')
+    .eq('game_id', game.id);
+
+  if (portfolioError) {
+    console.log("Portfolio fetch error", portfolioError);
+    return game.current_money;
+  }
+
+  // 3. Get stock values for this year
+  const { data: summaries, error: summaryError } = await supabase
+    .from('year_summary')
+    .select('*')
+    .eq('year_id', yearId);
+
+  if (summaryError) {
+    console.log("Summary fetch error", summaryError);
+    return game.current_money;
+  }
+
+  // 4. Calculate stock value
+  let stockValue = 0;
+
+  for (const item of portfolio) {
+    const summary = summaries.find(
+      (s: any) => s.stock_id === item.stock_id
+    );
+
+    if (summary) {
+      stockValue += item.shares * summary.close_price;
+    }
+  }
+
+
+  return game.current_money + game.income + stockValue;
+}
+
+export async function addNetWorth(game: any, yearId: string) {
+  const netWorth = await calculateNetWorth(game, yearId);
+
+  const { error } = await supabase
+    .from('net_worth_history')
+    .insert({
+      game_id: game.id,
+      year_id: yearId,
+      net_worth: netWorth,
+    });
+
+  if (error) {
+    console.log("Net worth insert error", error);
+  }
+}
+
 export async function nextYear({
   game,
   currentYear,
@@ -137,6 +194,7 @@ export async function nextYear({
   await supabase.from('yearly_prices').insert(yearlyPriceRows);
   await supabase.from('year_summary').insert(yearlySummaryRows);
 
+  await addNetWorth(game, newYear.id)
   // 7. Update game money
   const updatedMoney = game.current_money + game.income;
 
@@ -149,7 +207,7 @@ export async function nextYear({
   const finishGame = nextYearNumber >= endYear;
   if(!data || error) console.log(error)
   const newGame =  data;
-  console.log("NewGame, new Year", newGame, newYear)
+  
   return {
     newGame,
     newYear,

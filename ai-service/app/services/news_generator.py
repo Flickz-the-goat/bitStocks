@@ -1,6 +1,6 @@
 import random
 
-SECTORS = ["Technology", "Energy", "Finance", "Healthcare"]
+SECTORS = ["Technology", "Energy", "Finance", "Healthcare", "Industrial", "Consumer"]
 
 def random_impact():
     return round(random.uniform(-5, 5), 2)
