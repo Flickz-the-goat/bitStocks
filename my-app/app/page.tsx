@@ -170,8 +170,9 @@ export default function Home() {
 	{started && !finishedGame && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} finishedGame={finishedGame} setFinishedGame={setFinishedGame}
 	/>}
 	{finishedGame && game && (
+  
   <div
-    className="mb-6 p-6 rounded-2xl border shadow-md flex flex-col items-center text-center space-y-3"
+    className="mb-6 p-6 rounded-2xl border shadow-md flex flex-col items-center text-center space-y-4"
     style={{
       backgroundColor: 'var(--bg-secondary)',
       borderColor: 'var(--border-primary)',
@@ -181,51 +182,66 @@ export default function Home() {
     <h2 className="text-2xl font-bold">🎉 Game Complete!</h2>
 
     <p style={{ color: 'var(--text-secondary)' }}>
-      Here’s how you performed:
+      Final trading summary:
     </p>
 
-    <div className="flex gap-6 text-lg font-semibold">
-      <div>
-        <p style={{ color: 'var(--text-secondary)' }}>Starting</p>
-        <p>${game.starting_money}</p>
-      </div>
+    {(() => {
+      const diff = game.current_money - game.starting_money;
+      const percent = (diff / game.starting_money) * 100;
+      const isPositive = diff >= 0;
+      let resultMsg = '';
 
-      <div>
-        <p style={{ color: 'var(--text-secondary)' }}>Ending</p>
-        <p>${game.current_money.toFixed(2)}</p>
-      </div>
-    </div>
+      if (percent >= 20) {
+        resultMsg = 'Blazing performance! You crushed the market. 🚀';
+      } else if (percent >= 5) {
+        resultMsg = 'Strong finish—great directional picks. 📈';
+      } else if (percent >= 0) {
+        resultMsg = 'Solid close with gains in your pocket. Keep it up!';
+      } else if (percent >= -10) {
+        resultMsg = 'Not ideal, but a good learning run. Try again stronger.';
+      } else {
+        resultMsg = 'Rough ride, but you now know what to avoid next time.';
+      }
 
-    {/* Profit / Loss */}
-    <div className="text-lg font-bold">
-      {(() => {
-        const diff = game.current_money - game.starting_money;
-        const percent = (diff / game.starting_money) * 100;
+      const color = isPositive ? '#16a34a' : '#dc2626';
 
-        return (
-          <span
+      return (
+        <>
+          <div className="grid grid-cols-2 gap-4 w-full max-w-md text-left">
+            <div className="rounded-lg p-3 bg-gray-50 border border-gray-200">
+              <p className="text-xs text-gray-500">Starting</p>
+              <p className="text-lg font-semibold text-gray-800">${game.starting_money.toLocaleString()}</p>
+            </div>
+            <div className="rounded-lg p-3 bg-gray-50 border border-gray-200">
+              <p className="text-xs text-gray-500">Ending</p>
+              <p className="text-lg font-semibold text-gray-800">${game.current_money.toFixed(2).toLocaleString()}</p>
+            </div>
+          </div>
+
+          <div className="mt-2 p-4 rounded-xl w-full max-w-md border border-gray-300 bg-[var(--bg-accent)]">
+            <p className="text-sm font-medium" style={{ color }}>
+              {resultMsg}
+            </p>
+
+            <p className="mt-2 text-xl font-bold" style={{ color }}>
+              {isPositive ? '+' : ''}${diff.toFixed(2)} ({percent.toFixed(2)}%)
+            </p>
+          </div>
+
+          <button
+            onClick={() => resetGame()}
+            className="px-5 py-2 rounded-xl font-semibold transition hover:scale-105"
             style={{
-              color: diff >= 0 ? '#22c55e' : '#ef4444',
+              backgroundColor: 'var(--bg-secondary)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-primary)',
             }}
           >
-            {diff >= 0 ? '+' : ''}
-            ${diff.toFixed(2)} ({percent.toFixed(2)}%)
-          </span>
-        );
-      })()}
-    </div>
-
-    <p
-      className="text-sm"
-      style={{ color: 'var(--text-secondary)' }}
-    >
-      {game.current_money >= game.starting_money
-        ? 'Nice investing 💰'
-        : 'Tough market… better luck next time 📉'}
-    </p>
-	<button onClick={() => resetGame()} className="hover:underline hover:cursor-pointer">
-		New game
-	</button>
+            🔄 New Game
+          </button>
+        </>
+      );
+    })()}
   </div>
 )}
     </div>
