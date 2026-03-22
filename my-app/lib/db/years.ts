@@ -204,7 +204,7 @@ export async function nextYear({
     .eq('id', game.id).select().single();
 
   // 9. Check end condition
-  const finishGame = nextYearNumber >= endYear;
+  const finishGame = nextYearNumber >= 2028;
   if(!data || error) console.log(error)
   const newGame =  data;
   

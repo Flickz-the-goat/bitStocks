@@ -169,7 +169,7 @@ export default function Home() {
 	{/* Main Screen */}
 	{started && !finishedGame && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} finishedGame={finishedGame} setFinishedGame={setFinishedGame}
 	/>}
-	{finishedGame && game && (
+	{finishedGame && (
   
   <div
     className="mb-6 p-6 rounded-2xl border shadow-md flex flex-col items-center text-center space-y-4"
