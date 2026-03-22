@@ -23,10 +23,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setThemeState] = useState<Theme>('white');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    }
+    setThemeState('white');
+    localStorage.setItem('theme', 'white');
   }, []);
 
   const setTheme = (newTheme: Theme) => {

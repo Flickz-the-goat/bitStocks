@@ -58,14 +58,31 @@ async function fetchRecentTransactions(gameId: string) {
 
 export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelProps) {
   const { theme } = useTheme();
+  const panelTextColor = theme === 'dark' ? '#fff' : '#121212';
   const [portfolioData, setPortfolioData] = useState<any[]>([]);
   const [stocksMap, setStocksMap] = useState<Map<string, any>>(new Map());
   const [pricesMap, setPricesMap] = useState<Map<string, number>>(new Map());
   const [chartData, setChartData] = useState<(string | number)[][]>([]);
   const [netWorthData, setNetWorthData] = useState<(string | number)[][]>([['Year', 'Net Worth']]);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [tumbleweeds, setTumbleweeds] = useState<Array<{id:number; top:string; duration:string; delay:string; shift:string;}>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (theme === 'wildwest') {
+      const randomTumble = Array.from({ length: 5 }, (_, i) => ({
+        id: i,
+        top: `${10 + Math.floor(Math.random() * 70)}%`,
+        duration: `${8 + Math.floor(Math.random() * 8)}s`,
+        delay: `${(Math.random() * 3).toFixed(2)}s`,
+        shift: `${20 + Math.floor(Math.random() * 80)}px`,
+      }));
+      setTumbleweeds(randomTumble);
+    } else {
+      setTumbleweeds([]);
+    }
+  }, [theme]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -171,47 +188,43 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
   };
 
   return (
-    <div className="w-84 p-4 flex flex-col gap-4 rounded-xl relative" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
+    <div className="w-84 p-4 flex flex-col gap-4 rounded-xl relative" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: panelTextColor }}>
       {/* Tumbleweed animation - only for wild west theme */}
       {theme === 'wildwest' && (
         <>
           <style>{`
-            @keyframes tumbleweed-move-1 {
-              from {
+            @keyframes tumbleweed-move {
+              0% {
                 left: -50px;
-                transform: translateY(0px) rotate(0deg);
+                top: var(--start-top);
+                opacity: 0;
+                transform: rotate(0deg);
               }
-              to {
-                left: 100vw;
-                transform: translateY(-200px) rotate(3600deg);
+              10% { opacity: 1; }
+              40% {
+                left: 40vw;
+                top: calc(var(--start-top) - var(--vert-shift));
               }
-            }
-            @keyframes tumbleweed-move-2 {
-              from {
-                left: -50px;
-                transform: translateY(0px) rotate(0deg);
+              80% {
+                left: 80vw;
+                top: calc(var(--start-top) - calc(var(--vert-shift) / 2));
               }
-              to {
-                left: 100vw;
-                transform: translateY(-400px) rotate(3600deg);
-              }
-            }
-            @keyframes tumbleweed-move-3 {
-              from {
-                left: -50px;
-                transform: translateY(0px) rotate(0deg);
-              }
-              to {
-                left: 100vw;
-                transform: translateY(-100px) rotate(3600deg);
+              100% {
+                left: 110vw;
+                top: calc(var(--start-top) - calc(var(--vert-shift) / 3));
+                opacity: 0;
+                transform: rotate(3600deg);
               }
             }
             .tumbleweed {
               position: fixed;
-              width: 40px;
-              height: 40px;
+              width: 42px;
+              height: 42px;
               z-index: 10;
               pointer-events: none;
+              --start-top: 20%;
+              --vert-shift: 60px;
+              border-radius: 50%;
             }
             .tumbleweed::before {
               content: '';
@@ -220,9 +233,7 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
               height: 100%;
               border: 2px solid #8B4513;
               border-radius: 50%;
-              box-shadow: 
-                inset 2px 2px 0 rgba(139, 69, 19, 0.5),
-                inset -2px -2px 0 rgba(139, 69, 19, 0.5);
+              box-shadow: inset 2px 2px 0 rgba(139, 69, 19, 0.5), inset -2px -2px 0 rgba(139, 69, 19, 0.5);
             }
             .tumbleweed::after {
               content: '';
@@ -234,31 +245,21 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
               transform: rotate(45deg);
             }
           `}</style>
-          <div 
-            className="tumbleweed"
-            style={{
-              animation: 'tumbleweed-move-1 8s linear infinite',
-              top: '10%'
-            }}
-          />
-          <div 
-            className="tumbleweed"
-            style={{
-              animation: 'tumbleweed-move-2 12s linear infinite 2s',
-              top: '20%'
-            }}
-          />
-          <div 
-            className="tumbleweed"
-            style={{
-              animation: 'tumbleweed-move-3 10s linear infinite 4s',
-              top: '15%'
-            }}
-          />
+          {tumbleweeds.map((t) => (
+            <div
+              key={t.id}
+              className="tumbleweed"
+              style={{
+                animation: `tumbleweed-move ${t.duration} linear infinite ${t.delay}`,
+                '--start-top': t.top,
+                '--vert-shift': t.shift,
+              } as React.CSSProperties}
+            />
+          ))}
         </>
       )}
       {/* Container 1 - Pie Chart */}
-      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col items-center justify-center border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col items-center justify-center border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: panelTextColor }}>
         <h2 className="text-sm font-bold mb-2 text-gray-800">Portfolio by Sector</h2>
         {loading ? (
           <span className="text-gray-600">Loading...</span>
@@ -278,7 +279,7 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
       </div>
 
       {/* Container 2 - Net Worth Line Chart */}
-      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: panelTextColor }}>
         <h2 className="text-sm font-bold mb-2 text-gray-800">Net Worth History</h2>
         {netWorthData.length > 1 ? (
           <Chart
@@ -294,7 +295,7 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
       </div>
 
       {/* Container 3 - Recent Transactions */}
-      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: 'var(--text-primary)' }}>
+      <div className="flex-1 rounded-xl p-4 shadow-md flex flex-col border border-gray-300" style={{ backgroundColor: 'var(--bg-accent)', color: panelTextColor }}>
         <h3 className="font-bold text-sm mb-3 text-gray-800">Recent Transactions</h3>
         <div className="flex flex-col gap-2 max-h-44 overflow-y-auto">
           {transactions.length > 0 ? (
