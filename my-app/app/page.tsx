@@ -10,6 +10,7 @@ export default function Home() {
 	const [news, setNews] = useState<NewsEvent[] | null>(null)
 	const [creatingGame, setCreatingGame] = useState(false);
 	const [started, setStarted] = useState(false);
+	const [finishedGame, setFinishedGame] = useState(false);
 
 	const generateNews = async (gameId: string, yearNumber: number, yearId: string) => {
 	  try {
@@ -155,7 +156,7 @@ export default function Home() {
 	)}
 
 	{/* Main Screen */}
-	{started && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} 
+	{started && !finishedGame && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} finishedGame={finishedGame} setFinishedGame={setFinishedGame}
 	/>}
     </div>
   );

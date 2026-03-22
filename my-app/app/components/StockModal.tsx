@@ -43,6 +43,20 @@ export default function StockModal({
 
   const totalCost = shares * latestPrice;
 
+    const ownedShares = stock.ownedShares ?? 0;
+    const avgBuyPrice = stock.avgBuyPrice ?? 0;
+
+    // total value if sold now
+    const currentValue = ownedShares * latestPrice;
+
+    // total cost basis
+    const totalInvested = ownedShares * avgBuyPrice;
+
+    // profit / loss
+    const profit = currentValue - totalInvested; 
+  const percentReturn =
+  totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
+
   // 🔥 BUY
   const handleBuy = async () => {
     if (shares <= 0) return;
@@ -170,12 +184,38 @@ export default function StockModal({
             className="mt-4 text-sm grid grid-cols-2 gap-3 p-3 rounded-xl"
             style={{ backgroundColor: 'var(--bg-secondary)' }}
           >
-            <p>Open: ${stock.year_summary.open_price}</p>
-            <p>Close: ${stock.year_summary.close_price}</p>
-            <p>High: ${stock.year_summary.high_price}</p>
-            <p>Low: ${stock.year_summary.low_price}</p>
-          </div>
-        )}
+        <p>Open: ${stock.year_summary.open_price.toFixed(2)}</p>
+        <p>Close: ${stock.year_summary.close_price.toFixed(2)}</p>
+        <p>High: ${stock.year_summary.high_price.toFixed(2)}</p>
+        <p>Low: ${stock.year_summary.low_price.toFixed(2)}</p>         
+        </div>
+            )}
+        
+            {ownedShares > 0 && (
+      <div
+        className="mt-4 p-3 rounded-xl text-sm space-y-1"
+        style={{ backgroundColor: 'var(--bg-secondary)' }}
+      >
+        <p>Shares Owned: {ownedShares}</p>
+        <p>Avg Buy Price: ${avgBuyPrice.toFixed(2)}</p>
+        <p>Current Value: ${currentValue.toFixed(2)}</p>
+        <p
+            style={{
+                color: percentReturn >= 0 ? '#22c55e' : '#ef4444',
+            }}
+            >
+            Return: {percentReturn.toFixed(2)}%
+            </p>
+        <p
+          style={{
+            color: profit >= 0 ? '#22c55e' : '#ef4444',
+            fontWeight: '600',
+          }}
+        >
+          {profit >= 0 ? 'Profit' : 'Loss'}: ${profit.toFixed(2)}
+        </p>
+      </div>
+    )}
 
         {/* 🔥 BUY / SELL PANEL */}
         <div

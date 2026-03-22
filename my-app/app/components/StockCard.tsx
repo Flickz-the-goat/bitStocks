@@ -21,7 +21,7 @@ export default function StockCard({
     )}
       {summary ? (
         <div className="mt-2 text-sm">
-          <p>Close: ${summary.close_price}</p>
+          <p>Close: ${summary.close_price.toFixed(2)}</p>
           <p
             className={
               summary.close_price >= summary.open_price

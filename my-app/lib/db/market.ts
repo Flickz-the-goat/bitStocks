@@ -85,3 +85,28 @@ export async function generateStockDataForYear(yearId: string) {
     stocksProcessed: stocks.length,
   };
 }
+
+export function generateMonthlyPricesFromOpenClose(
+  open: number,
+  close: number
+): number[] {
+  const prices: number[] = [];
+  const steps = 12;
+
+  for (let i = 0; i < steps; i++) {
+    const t = i / (steps - 1);
+
+    // linear interpolation
+    let price = open + (close - open) * t;
+
+    // add noise (volatility)
+    const noise = price * (Math.random() * 0.1 - 0.05); // ±5%
+    price += noise;
+
+    price = Math.max(price, 1); // prevent negative
+
+    prices.push(Number(price.toFixed(2)));
+  }
+
+  return prices;
+}

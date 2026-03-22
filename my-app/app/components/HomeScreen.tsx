@@ -6,10 +6,16 @@ import ActionButton from "./ActionButton";
 interface HomeScreenProps {
   game: Game | null;
   year: Year | null;
-  news: NewsEvent[] | null;
+  news: NewsEvent[];
+  setGame: (game: Game | null) => void 
+  setYear: (year: Year | null) => void
+  setNews: (news: NewsEvent[] | null) => void
+  finishedGame: boolean;
+  setFinishedGame: (finishedGame: boolean) => void;
 }
 
-export default function HomeScreen({ game, year, news }: HomeScreenProps) {
+export default function HomeScreen({ game, year, news, finishedGame, setFinishedGame, setGame,setYear, setNews }: HomeScreenProps) {
+  if(!news || !game || !year) return
   return (
     <div className="flex flex-col h-full overflow-hidden" style={{ color: 'var(--text-primary)' }}>
       {/* Top Bar */}
@@ -46,9 +52,8 @@ export default function HomeScreen({ game, year, news }: HomeScreenProps) {
 
       {/* Action Button */}
       <div className="mt-6 flex justify-center">
-        <ActionButton>
-          Next year
-        </ActionButton>
+        <ActionButton game={game} currentYear={year} endYear={2030} news={news} setGame={setGame} setYear={setYear} setNews={setNews} setFinishedGame={setFinishedGame}/>
+
       </div>
     </div>
   );

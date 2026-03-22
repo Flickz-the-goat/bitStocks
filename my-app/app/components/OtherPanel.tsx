@@ -8,6 +8,7 @@ interface OtherPanelProps {
   gameId: string;
   currentMoney: number;
   yearId: string;
+  currentYear: number;
 }
 
 async function fetchPortfolio(gameId: string) {
@@ -56,7 +57,7 @@ async function fetchRecentTransactions(gameId: string) {
   return res.json();
 }
 
-export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelProps) {
+export default function OtherPanel({currentYear, gameId, yearId, currentMoney }: OtherPanelProps) {
   const { theme } = useTheme();
 
   // Use real color (no CSS vars for charts)
@@ -159,7 +160,8 @@ export default function OtherPanel({ gameId, yearId, currentMoney }: OtherPanelP
             networthDataFormatted.push([`Y${year}`, item.net_worth]);
           });
         } else {
-          networthDataFormatted.push([`Y${yearId}`, currentMoney]);
+          // fallback to current money if no net worth history data exists
+          networthDataFormatted.push([`${currentYear}`, currentMoney]);
         }
 
         setNetWorthData(networthDataFormatted);

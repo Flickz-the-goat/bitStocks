@@ -9,6 +9,20 @@ export async function getAllStocks() {
   return data;
 }
 
+export async function getSectors() {
+  const { data, error } = await supabase
+    .from("sectors")
+    .select("*")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching sectors:", error);
+    throw error;
+  }
+
+  return data;
+}
+
 export async function getStockPrices(stockId: string, yearId: string) {
   const { data, error } = await supabase
     .from('yearly_prices')
@@ -29,8 +43,7 @@ export async function getStocksWithYearData(yearId: string) {
       id,
       name,
       ticker,
-      base_price,
-      sectors(name)
+      base_price
     `);
 
   if (stocksError) throw stocksError;

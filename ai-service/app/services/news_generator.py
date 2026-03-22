@@ -8,7 +8,7 @@ def random_impact():
 def generate_news(year: int):
     events = []
 
-    for _ in range(3):  # 3 events per year
+    for _ in range(10):  # 3 events per year
         impacts_true = {sector: random_impact() for sector in SECTORS}
         impacts_false = {sector: random_impact() for sector in SECTORS}
 

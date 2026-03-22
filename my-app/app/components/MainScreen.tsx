@@ -21,9 +21,11 @@ interface MainScreenProps {
   setYear: (year: Year | null) => void;
   news: NewsEvent[] | null;
   setNews: (news: NewsEvent[] | null) => void;
+  finishedGame: boolean;
+  setFinishedGame: (finishedGame: boolean) => void;
 }
 
-export default function MainScreen({ game, setGame, year, setYear, news, setNews }: MainScreenProps) {
+export default function MainScreen({ game, setGame, year, setYear, news, setNews, finishedGame, setFinishedGame }: MainScreenProps) {
   const { theme } = useTheme();
   const [activeView, setActiveView] = useState("home");
   if(!game || !year || !news) return
@@ -38,7 +40,7 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
          return <NewsScreen news={news} year={year}/>;
       default:
         return (
-          <HomeScreen game={game} year={year} news={news} />
+          <HomeScreen game={game} year={year} news={news} finishedGame={finishedGame} setFinishedGame={setFinishedGame} setGame={setGame} setYear={setYear} setNews={setNews}/>
         );
     }
   };
@@ -72,12 +74,12 @@ export default function MainScreen({ game, setGame, year, setYear, news, setNews
       </div>
 
       {/* Main Screen */}
-      <div className="max-h-[calc(100vh-80px)] p-4 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)'}}>
+      <div className="max-h-[calc(100vh-70px)] p-4 flex flex-col min-w-0 rounded-md" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-primary)'}}>
         {renderActiveView()}
       </div>
 
       {/* Right Panel (OtherPanel) */}
-      <OtherPanel gameId={game.id} yearId={year.id} currentMoney={game.current_money}/>
+      <OtherPanel currentYear={year.year_number} gameId={game.id} yearId={year.id} currentMoney={game.current_money}/>
     </div>
     </div>
   );
