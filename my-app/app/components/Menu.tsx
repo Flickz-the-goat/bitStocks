@@ -10,7 +10,7 @@
 // }
 export default function Menu({ setActive }: { setActive: (s: string) => void }) {
   return (
-    <div className="bg-gray-800 text-white w-48 p-4 flex flex-col space-y-4">
+    <div className="bg-gray-800 text-white w-48 p-2 flex flex-col space-y-2">
       <button onClick={() => setActive("home")} className="hover:bg-gray-700 px-4 py-2 rounded transition">
         Home
       </button>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Game, NewsEvent, Year } from "@/types/gameType";
 import MainScreen from "@/app/components/MainScreen";
 import { HomeIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
 	const [game, setGame] = useState<Game | null>(null);
@@ -11,6 +12,15 @@ export default function Home() {
 	const [creatingGame, setCreatingGame] = useState(false);
 	const [started, setStarted] = useState(false);
 	const [finishedGame, setFinishedGame] = useState(false);
+
+	const resetGame = () =>{
+		setGame(null);
+		setYear(null);
+		setNews(null);
+		setCreatingGame(false);
+		setStarted(false)
+		setFinishedGame(false)
+	}
 
 	const generateNews = async (gameId: string, yearNumber: number, yearId: string) => {
 	  try {
@@ -158,6 +168,65 @@ export default function Home() {
 	{/* Main Screen */}
 	{started && !finishedGame && <MainScreen game={game} setGame={setGame} year={year} setYear={setYear} news={news} setNews={setNews} finishedGame={finishedGame} setFinishedGame={setFinishedGame}
 	/>}
+	{finishedGame && game && (
+  <div
+    className="mb-6 p-6 rounded-2xl border shadow-md flex flex-col items-center text-center space-y-3"
+    style={{
+      backgroundColor: 'var(--bg-secondary)',
+      borderColor: 'var(--border-primary)',
+      color: 'var(--text-primary)',
+    }}
+  >
+    <h2 className="text-2xl font-bold">🎉 Game Complete!</h2>
+
+    <p style={{ color: 'var(--text-secondary)' }}>
+      Here’s how you performed:
+    </p>
+
+    <div className="flex gap-6 text-lg font-semibold">
+      <div>
+        <p style={{ color: 'var(--text-secondary)' }}>Starting</p>
+        <p>${game.starting_money}</p>
+      </div>
+
+      <div>
+        <p style={{ color: 'var(--text-secondary)' }}>Ending</p>
+        <p>${game.current_money.toFixed(2)}</p>
+      </div>
+    </div>
+
+    {/* Profit / Loss */}
+    <div className="text-lg font-bold">
+      {(() => {
+        const diff = game.current_money - game.starting_money;
+        const percent = (diff / game.starting_money) * 100;
+
+        return (
+          <span
+            style={{
+              color: diff >= 0 ? '#22c55e' : '#ef4444',
+            }}
+          >
+            {diff >= 0 ? '+' : ''}
+            ${diff.toFixed(2)} ({percent.toFixed(2)}%)
+          </span>
+        );
+      })()}
+    </div>
+
+    <p
+      className="text-sm"
+      style={{ color: 'var(--text-secondary)' }}
+    >
+      {game.current_money >= game.starting_money
+        ? 'Nice investing 💰'
+        : 'Tough market… better luck next time 📉'}
+    </p>
+	<button onClick={() => resetGame()} className="hover:underline hover:cursor-pointer">
+		New game
+	</button>
+  </div>
+)}
     </div>
   );
 }

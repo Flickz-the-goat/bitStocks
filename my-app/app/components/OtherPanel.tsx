@@ -201,7 +201,7 @@ export default function OtherPanel({currentYear, gameId, yearId, currentMoney }:
 
   return (
     <div
-      className="w-84 p-4 flex flex-col gap-4 rounded-xl"
+      className="w-84 p-2 flex flex-col gap-4 rounded-xl"
       style={{
         backgroundColor: 'var(--bg-secondary)',
         border: '1px solid var(--border-primary)',
