@@ -86,6 +86,13 @@ export default function ActionButton({
       setYear(newYear);
      // 3️⃣ update game money locally
       setGame(newGame);
+      console.log(finishGame)
+
+      if (finishGame) {
+        console.log("Game Finished");
+        setFinishedGame(true)
+      }
+
 
       // 5️⃣ generate NEW news for next year
       const newNews = await generateNews(
@@ -95,13 +102,7 @@ export default function ActionButton({
       );
 
       setNews(newNews);
-
       // 6️⃣ optional: handle game end
-      if (finishGame) {
-        console.log("Game Finished");
-        setFinishedGame(true)
-      }
-
     } catch (err) {
       console.error("Next year failed:", err);
     } finally {
