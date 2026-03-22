@@ -4,6 +4,7 @@ import { Game, NewsEvent, Year } from "@/types/gameType";
 import MainScreen from "@/app/components/MainScreen";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
+import { addNetWorth } from "@/lib/db/years";
 
 export default function Home() {
 	const [game, setGame] = useState<Game | null>(null);
